@@ -1,5 +1,5 @@
 {{-- Muestra portada + galería (solo lectura) --}}
-@php $galeria = (array) ($convocatoria->galeria_urls ?? []); @endphp
+@php $galeria = array_values((array)($convocatoria->galeria_urls_public ?? [])); @endphp
 
 @if($convocatoria->portada_url || count($galeria))
   <style>
@@ -15,18 +15,15 @@
 
   <div class="c-media">
     <div class="c-portada">
-      @if($convocatoria->portada_url)
-        <img src="{{ $convocatoria->portada_url }}" alt="Portada {{ $convocatoria->titulo }}">
-      @else
-        {{-- Placeholder opcional --}}
-      @endif
+      <img src="{{ $convocatoria->portada_url }}" alt="Portada de {{ $convocatoria->titulo }}" loading="lazy">
     </div>
 
     <div class="c-grid">
       @foreach($galeria as $i => $url)
         <a class="c-link" href="{{ $url }}" target="_blank" rel="noopener" title="Abrir imagen {{ $i+1 }}">
           <div class="c-thumb">
-            <img src="{{ $url }}" alt="Imagen {{ $i+1 }} — {{ $convocatoria->titulo }}">
+          <img src="{{ $url }}" alt="Imagen {{ $i+1 }} — {{ $convocatoria->titulo }}" loading="lazy">
+          </div>
           </div>
         </a>
       @endforeach

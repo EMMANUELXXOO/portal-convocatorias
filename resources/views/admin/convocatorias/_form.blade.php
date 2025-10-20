@@ -250,8 +250,8 @@
   <label class="block font-semibold">Portada</label>
   <div class="my-2 thumb-frame">
     <img id="portadaPreview"
-         src="{{ $c?->portada_url ?? asset('images/convocatoria-placeholder.jpg') }}"
-         class="thumb-img" alt="Portada">
+         src="{{ $c?->portada_url ?? asset('images/convocatoria-placeholder.svg') }}"
+         class="thumb-img" alt="Portada de {{ $c?->titulo ?? 'convocatoria' }}" loading="lazy">
 
     @if(!empty($c?->portada_path))
   <button type="button"
@@ -436,7 +436,7 @@
         if (!resp.ok) throw new Error('HTTP '+resp.status);
 
         const img = document.getElementById('portadaPreview');
-        if (img) img.src = '{{ asset('images/convocatoria-placeholder.jpg') }}';
+       if (img) img.src = '{{ asset('images/convocatoria-placeholder.svg') }}';
         btn.remove();
       }catch(e){
         alert('No se pudo eliminar la portada. '+e.message);

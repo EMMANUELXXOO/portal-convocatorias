@@ -44,8 +44,8 @@ class AdminConvocatoriaController extends Controller
 
         // Portada
         if ($request->hasFile('portada')) {
-            $payload['portada_path'] = $request->file('portada')
-                ->store('convocatorias/portadas', 'public');
+           $payload['portada_path'] = Storage::disk('public')
+                ->putFile('convocatorias', $request->file('portada'));
         }
 
         // Galería (si no hay nada, guarda [])
@@ -93,11 +93,11 @@ class AdminConvocatoriaController extends Controller
 
         // Portada
         if ($request->hasFile('portada')) {
-            if ($convocatoria->portada_path) {
+           if ($convocatoria->portada_path && !preg_match('~^https?://~i', $convocatoria->portada_path)) {
                 Storage::disk('public')->delete($convocatoria->portada_path);
             }
-            $payload['portada_path'] = $request->file('portada')
-                ->store('convocatorias/portadas', 'public');
+              $payload['portada_path'] = Storage::disk('public')
+                ->putFile('convocatorias', $request->file('portada'));
         } else {
             unset($payload['portada_path']);
         }
@@ -242,7 +242,7 @@ class AdminConvocatoriaController extends Controller
             'cupo_total'   => ['nullable','integer','min:0'],
 
             // Portada / ubicación
-            'portada'      => ['nullable','image','max:4096'],
+          'portada'      => ['nullable','image','mimes:jpg,jpeg,png,webp','max:3072'],
             'ubicacion'    => ['nullable','string','max:255'],
 
             // Contacto

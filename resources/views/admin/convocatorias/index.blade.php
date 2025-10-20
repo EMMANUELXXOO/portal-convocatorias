@@ -90,8 +90,8 @@
               'borrador' => 'b-borrador',
               default    => 'b-inactiva',
             };
-            $thumb       = $c->portada_url ?? asset('images/convocatoria-placeholder.jpg');
-            $placeholder = asset('images/convocatoria-placeholder.jpg');
+          $thumb       = $c->portada_url;
+            $placeholder = asset('images/convocatoria-placeholder.svg');
           @endphp
 
           <div class="card">

@@ -6,11 +6,6 @@
     </div>
   </x-slot>
 
- 
-  @php
-    $placeholder = asset('images/convocatoria-placeholder.jpg');
-  @endphp
-
   <div class="py-10">
     <div class="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
       @if($convocatorias->isEmpty())
@@ -22,8 +17,8 @@
         <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           @foreach($convocatorias as $c)
             @php
-              $thumb = $c->portada_url ?? 
-              $thumb = $c->portada_url ?? $placeholder;
+            $thumb = $c->portada_url;
+              $placeholder = asset('images/convocatoria-placeholder.svg');
               $estatus = strtoupper($c->estatus ?? 'Inactiva');
               $estatusColor = match($c->estatus) {
                 'activa' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200',

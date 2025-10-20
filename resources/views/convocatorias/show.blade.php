@@ -57,13 +57,13 @@
   </style>
 
   @php
-    $placeholder = asset('images/convocatoria-placeholder.jpg');
+     $placeholder = asset('images/convocatoria-placeholder.svg');
 
     // Usa directamente lo que expone el modelo:
-    $slides = (array) ($convocatoria->carousel_slides ?? []);
+    $slides = array_values(array_filter((array)($convocatoria->carousel_slides ?? [])));
     if (empty($slides)) {
         // fallback si no hay nada
-        $slides = [$convocatoria->portada_url ?: $placeholder];
+      $slides = [$convocatoria->portada_url];
     }
 
     $coverClass = ($convocatoria->hero_fit ?? 'cover') === 'contain' ? 'hero--contain' : 'hero--cover';
@@ -91,7 +91,7 @@
               @foreach($slides as $i => $img)
                 <div class="carousel-item h-100 @if($i===0) active @endif" data-bs-interval="5000">
                   <img src="{{ $img }}" class="hero-img" alt="Imagen {{ $i+1 }} de {{ $convocatoria->titulo }}"
-                       onerror="this.onerror=null;this.src='{{ $placeholder }}';">
+                     onerror="this.onerror=null;this.src='{{ $placeholder }}';" loading="lazy">
                   @if($i===0)
                     <div class="caption-wrap">
                       <div class="title-shadow">{{ $convocatoria->titulo }}</div>
@@ -120,7 +120,7 @@
           {{-- Modo estático (sin carrusel) --}}
           <img src="{{ $slides[0] ?? $placeholder }}" class="hero-img"
                alt="Portada de {{ $convocatoria->titulo }}"
-               onerror="this.onerror=null;this.src='{{ $placeholder }}';">
+             onerror="this.onerror=null;this.src='{{ $placeholder }}';" loading="lazy">
           <div class="caption-wrap">
             <div class="title-shadow">{{ $convocatoria->titulo }}</div>
             <div class="chips">
@@ -174,7 +174,7 @@
           {{-- Mosaico de galería (usa URLs públicas del modelo) --}}
           @php
             $galeria = array_values(array_unique(array_filter((array)($convocatoria->galeria_urls_public ?? []))));
-            if ($convocatoria->portada_url) array_unshift($galeria, $convocatoria->portada_url);
+           if ($convocatoria->portada_path) array_unshift($galeria, $convocatoria->portada_url);
             $galeria = array_values(array_unique($galeria));
           @endphp
           <div class="card">

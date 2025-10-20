@@ -6,10 +6,6 @@
     </div>
   </x-slot>
 
-  @php
-    $placeholder = asset('images/convocatoria-placeholder.jpg');
-  @endphp
-
   <div class="py-10">
     <div class="mx-auto flex max-w-7xl flex-col gap-10 px-4 sm:px-6 lg:px-8">
       @guest
@@ -39,7 +35,15 @@
           <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             @foreach($convocatorias as $c)
               @php
-                $thumb = $c->portada_url ?? $placeholder;
+               $thumb = $c->portada_url;
+                if (!$thumb && filled($c->portada_path)) {
+                  $path = ltrim(preg_replace('~^(?:public|storage)/~', '', $c->portada_path ?? ''), '/');
+                  if ($path !== '') {
+                    $thumb = asset('storage/' . $path);
+                  }
+                }
+               $thumb = $c->portada_url;
+                $placeholder = asset('images/convocatoria-placeholder.svg');
                 $tipoEtiqueta = strtoupper($c->tipo ?? $c->categoria ?? $c->duracion ?? 'Convocatoria');
                 $fechaInicio = $c->fecha_inicio?->translatedFormat('d \de F Y') ?? 'Por definir';
                 $fechaFin = $c->fecha_fin?->translatedFormat('d \de F Y') ?? 'Por definir';

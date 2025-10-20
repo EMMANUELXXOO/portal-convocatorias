@@ -1,4 +1,4 @@
-@php $galeria = (array) ($convocatoria->galeria_urls ?? []); @endphp
+@php $galeria = array_values((array)($convocatoria->galeria_urls_public ?? [])); @endphp
 
 @if($convocatoria->portada_url || count($galeria))
   <div class="mb-4">

@@ -49,24 +49,56 @@ class Convocatoria extends Model
     ];
 
     // ---------- Accessors de solo lectura ----------
-    public function getPortadaUrlAttribute(): ?string
+   public function getPortadaUrlAttribute(): string
     {
-        if (!$this->portada_path) return null;
-        if (preg_match('~^https?://~i', $this->portada_path)) {
-            return $this->portada_path;
+       $placeholder = asset('images/convocatoria-placeholder.svg');
+        $path = $this->portada_path;
+
+        if (!$path) {
+            return $placeholder;
         }
-        return Storage::disk('public')->url($this->portada_path);
+
+        if (preg_match('~^https?://~i', $path)) {
+            return $path;
+        }
+        $disk = Storage::disk('public');
+
+        if (!$disk->exists($path)) {
+            return $placeholder;
+        }
+
+        $url = $disk->url($path);
+
+        if ($this->updated_at) {
+            $separator = str_contains($url, '?') ? '&' : '?';
+            $url .= $separator.'v='.$this->updated_at->timestamp;
+        }
+
+        return $url;
     }
 
     public function getGaleriaUrlsPublicAttribute(): array
     {
         $arr = (array) ($this->galeria_urls ?? []);
         $out = [];
+        $disk = Storage::disk('public');
         foreach ($arr as $p) {
             if (!is_string($p) || $p === '') continue;
-            $out[] = preg_match('~^https?://~i', $p)
-                ? $p
-                : Storage::disk('public')->url($p);
+          if (preg_match('~^https?://~i', $p)) {
+                $out[] = $p;
+                continue;
+            }
+            if (!$disk->exists($p)) {
+                continue;
+            }
+
+            $url = $disk->url($p);
+            if ($this->updated_at) {
+                $separator = str_contains($url, '?') ? '&' : '?';
+                $url .= $separator.'v='.$this->updated_at->timestamp;
+            }
+
+            $out[] = $url;
         }
         return $out;
     }
